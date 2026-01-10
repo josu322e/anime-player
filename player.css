@@ -1,10 +1,11 @@
-/* Estilos del reproductor remoto */
 #remote-player-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background: #000;
-    z-index: 9999;
+    z-index: 99999;
     display: none;
     flex-direction: column;
 }
@@ -13,47 +14,36 @@
     flex: 1;
     position: relative;
     background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-video { width: 100%; height: 100%; }
+video {
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
 
 .player-controls-top {
     position: absolute;
-    top: 0; width: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
     padding: 20px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    z-index: 10;
+    color: white;
 }
 
 .back-btn {
-    background: none; border: none; color: white;
-    font-size: 24px; cursor: pointer;
-}
-
-.netflix-panel {
-    background: #141414;
-    padding: 20px;
-    border-top: 1px solid #333;
-    max-height: 30vh;
-    overflow-y: auto;
-}
-
-.ep-list-remote {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.ep-item-remote {
-    background: #2f2f2f;
-    padding: 10px;
-    border-radius: 4px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
     cursor: pointer;
-    font-size: 14px;
-    transition: 0.3s;
+    padding: 0 10px;
 }
-
-.ep-item-remote:hover { background: #e50914; }
-.ep-item-remote.active { border: 2px solid #e50914; }
