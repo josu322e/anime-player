@@ -1,69 +1,98 @@
 const RemoteNetflixPlayer = {
+    currentAnime: null,
+    currentIndex: 0,
+
     init(data, epIndex = 0) {
+        this.currentAnime = data;
+        this.currentIndex = epIndex;
         const overlay = document.getElementById('remote-player-overlay');
         overlay.style.display = 'flex';
-        this.render(data, epIndex);
-        this.enterFullScreen(overlay);
+        
+        this.render();
+        this.enterFullExperience(overlay);
     },
 
-    render(data, index) {
+    render() {
         const overlay = document.getElementById('remote-player-overlay');
-        const episode = data.episodes[index] || { name: "Cargando...", url: "" };
+        const ep = this.currentAnime.episodes[this.currentIndex];
         
         overlay.innerHTML = `
-            <div class="video-container">
-                <div class="player-controls-top">
-                    <button class="back-btn" onclick="RemoteNetflixPlayer.close()">✕</button>
-                    <span id="remote-playing-title">${data.title} - ${episode.name}</span>
+            <div class="netflix-player-container">
+                <video id="main-video" src="${ep.url}" autoplay playsinline></video>
+                
+                <div class="video-ui">
+                    <div class="top-bar">
+                        <button class="icon-btn" onclick="RemoteNetflixPlayer.close()">✕</button>
+                        <div class="video-info">
+                            <span class="anime-name">${this.currentAnime.title}</span>
+                            <span class="ep-name">${ep.name}</span>
+                        </div>
+                    </div>
+
+                    <div class="center-controls">
+                        <button class="skip-btn" onclick="this.parentElement.parentElement.querySelector('video').currentTime -= 10">↺ 10</button>
+                        <button class="play-pause" onclick="RemoteNetflixPlayer.togglePlay(this)">⏸</button>
+                        <button class="skip-btn" onclick="this.parentElement.parentElement.querySelector('video').currentTime += 10">10 ↻</button>
+                    </div>
+
+                    <div class="bottom-bar">
+                        <div class="progress-container">
+                            <input type="range" class="seek-bar" value="0" step="0.1">
+                        </div>
+                        <div class="action-buttons">
+                            <button onclick="RemoteNetflixPlayer.showEpisodes()">📑 Episodios</button>
+                            <button onclick="RemoteNetflixPlayer.showAudio()">🌐 Idioma</button>
+                            <button onclick="RemoteNetflixPlayer.nextEpisode()">Siguiente ⏭</button>
+                        </div>
+                    </div>
                 </div>
-                <video id="main-video" controls autoplay playsinline>
-                    <source src="${episode.url}" type="video/mp4">
-                </video>
             </div>
         `;
+        this.setupEvents();
     },
 
-    async enterFullScreen(element) {
+    async enterFullExperience(el) {
         try {
-            // Activa pantalla completa
-            if (element.requestFullscreen) {
-                await element.requestFullscreen();
-            } else if (element.webkitRequestFullscreen) {
-                await element.webkitRequestFullscreen();
-            }
-
-            // Bloquea en horizontal (Solo funciona en móviles/Chrome/App24 si tiene permisos)
+            if (el.requestFullscreen) await el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+            
+            // Bloqueo horizontal forzado
             if (screen.orientation && screen.orientation.lock) {
-                await screen.orientation.lock('landscape').catch(err => console.log("Bloqueo de orientación no soportado"));
+                await screen.orientation.lock('landscape').catch(e => console.log("Permiso de rotación requerido"));
             }
-        } catch (e) {
-            console.error("Error al entrar a pantalla completa:", e);
+        } catch (err) {
+            console.error(err);
+        }
+    },
+
+    togglePlay(btn) {
+        const video = document.getElementById('main-video');
+        if (video.paused) { video.play(); btn.innerText = '⏸'; }
+        else { video.pause(); btn.innerText = '▶'; }
+    },
+
+    nextEpisode() {
+        if (this.currentIndex < this.currentAnime.episodes.length - 1) {
+            this.currentIndex++;
+            this.render();
         }
     },
 
     close() {
-        const video = document.getElementById('main-video');
-        if (video) video.pause();
-        
-        // Salir de pantalla completa y desbloquear orientación
-        if (document.exitFullscreen) {
-            document.exitFullscreen().catch(() => {});
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen().catch(() => {});
-        }
-        
-        if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-        }
-
+        if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
         document.getElementById('remote-player-overlay').style.display = 'none';
-    }
-};        video.play();
+        document.getElementById('main-video').pause();
     },
 
-    close() {
+    // Simulación de menús adicionales
+    showEpisodes() { alert("Lista de episodios: \n" + this.currentAnime.episodes.map((e,i)=>`${i+1}. ${e.name}`).join('\n')); },
+    showAudio() { alert("Seleccionar idioma: \n- Japonés (Original)\n- Español Latino"); },
+
+    setupEvents() {
         const video = document.getElementById('main-video');
-        if(video) video.pause();
-        document.getElementById('remote-player-overlay').style.display = 'none';
+        const seek = document.querySelector('.seek-bar');
+        video.ontimeupdate = () => { seek.value = (video.currentTime / video.duration) * 100; };
+        seek.oninput = () => { video.currentTime = (seek.value / 100) * video.duration; };
     }
 };
