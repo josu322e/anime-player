@@ -3,8 +3,8 @@
     {
       "id": 1,
       "titulo": "Demon Slayer",
-      "banner": "URL_IMAGEN_BANNER_HORIZONTAL_HD",
-      "poster": "URL_IMAGEN_VERTICAL",
+      "banner": "https://image.tmdb.org/t/p/original/3GQKYh6Trm8pxd2AypovoYQf4Ay.jpg",
+      "poster": "https://image.tmdb.org/t/p/original/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg",
       "descripcion": "Tanjiro busca la cura para su hermana...",
       "tags": ["Accion", "Sobrenatural", "Tendencia"],
       "esPelicula": false,
