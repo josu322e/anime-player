@@ -1,0 +1,39 @@
+{
+  "animes": [
+    {
+      "id": 1,
+      "titulo": "Demon Slayer",
+      "banner": "URL_IMAGEN_BANNER_HORIZONTAL_HD",
+      "poster": "URL_IMAGEN_VERTICAL",
+      "descripcion": "Tanjiro busca la cura para su hermana...",
+      "tags": ["Accion", "Sobrenatural", "Tendencia"],
+      "esPelicula": false,
+      "temporadas": [
+        {
+          "nombre": "Temporada 1",
+          "episodios": [
+             {"ep": 1, "nombre": "Crueldad", "url": "ENLACE_VIDEO_EP1"},
+             {"ep": 2, "nombre": "Entrenamiento", "url": "ENLACE_VIDEO_EP2"}
+          ]
+        },
+        {
+          "nombre": "Temporada 2",
+          "episodios": [
+             {"ep": 1, "nombre": "Distrito Rojo", "url": "ENLACE_VIDEO_T2_EP1"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "titulo": "Your Name",
+      "banner": "URL_BANNER",
+      "poster": "URL_POSTER",
+      "descripcion": "Dos extraños intercambian cuerpos...",
+      "tags": ["Romance", "Drama", "Peliculas"],
+      "esPelicula": true,
+      "urlPelicula": "ENLACE_VIDEO_PELICULA",
+      "temporadas": []
+    }
+  ]
+}
